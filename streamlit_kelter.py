@@ -246,7 +246,7 @@ async def getdata(session, stock):
                                name='Lowerband')])
                 fig.add_trace(
                     go.Scatter(x=final_df.index, y=final_df.signal1p, mode='markers', marker_symbol='triangle-up',
-                               marker_size=15))
+                               marker_size=15,marker_color='green'))
                 fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
                 fig.layout.xaxis.type = 'category'
                 st.title(stock)
@@ -269,7 +269,7 @@ async def getdata(session, stock):
                                name='Lowerband')])
                 fig.add_trace(
                     go.Scatter(x=final_df.index, y=final_df.signal2p, mode='markers', marker_symbol='triangle-down',
-                               marker_size=15))
+                               marker_size=15,marker_color='red'))
                 fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
                 fig.layout.xaxis.type = 'category'
                 st.title(stock)
