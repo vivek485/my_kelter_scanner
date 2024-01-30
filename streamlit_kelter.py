@@ -24,14 +24,17 @@ def gr(df):
     return st.plotly_chart(fig)
 
 st. set_page_config(layout="wide")
-st.title("Screener")
-dt = st.number_input(label='days_back',min_value=1,max_value=50)
-
+st.title("Kelter Screener")
+dt = st.number_input(label='Days_back',min_value=1,max_value=50)
+tframe = st.number_input(label='Timeframe',min_value=1,max_value=50000)
+st.text('Enter 1 min,3 min 5 min 15 min,60 min ,240 min ,1440 min,10080 min,43800 min')
+dy_back = st.number_input(label='Daysback',min_value=1,max_value=5000)
+st.text('Enter 500 for 1day')
 myst = []
 dic_buy = {'buy_symbol':[],'buydate':[]}
 dic_sell = {'sell_symbol':[],'selldate':[]}
-interval = 60  # enter 15,60,240,1440,10080,43800
-dayback = 300
+interval = tframe  # enter 15,60,240,1440,10080,43800
+dayback = dy_back
 ed = datetime.now()
 stdate = ed - timedelta(dayback)
 
