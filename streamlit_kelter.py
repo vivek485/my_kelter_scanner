@@ -83,7 +83,7 @@ async def getdata(session, stock):
             final_df['Low'] = final_df['Low'].astype(float)
             final_df['Volume'] = final_df['Volume'].astype(float)
             final_df['datetime'] = pd.to_datetime(final_df.datetime)  # final_df['datetime']#.astype('datetime64[ns]')
-
+            #print(final_df)
             final_df.set_index(final_df.datetime, inplace=True)
             final_df.drop(['time', 'datetime'], axis=1, inplace=True)
 
@@ -140,8 +140,8 @@ async def getdata(session, stock):
             final_df['hlprevioussell'] = np.where(
                 ((final_df.Close < final_df.hl) & (final_df.prevclose > final_df.prhl)), 1, 0)
 
-            final_df['signal1'] = np.where(((final_df.buysig == 6) & (final_df.prbuysig != 6)), 1, np.nan)
-            final_df['signal2'] = np.where(((final_df.sellsig == 3) & (final_df.prsellsig != 3)), 2, np.nan)
+            final_df['signal1'] = np.where(((final_df.buysig == 6) & (final_df.prbuysig != 6)), 1, 0)
+            final_df['signal2'] = np.where(((final_df.sellsig == 3) & (final_df.prsellsig != 3)), 2, 0)
 
             final_df['signal1p'] = np.where(((final_df.buysig == 6) & (final_df.prbuysig != 6)), final_df['Low'], np.nan)
             final_df['signal2p'] = np.where(((final_df.sellsig == 3) & (final_df.prsellsig != 3)), final_df['High'], np.nan)
@@ -168,6 +168,25 @@ async def getdata(session, stock):
             # st.plotly_chart(fig)
 
             by = final_df[final_df.signal1 == 1].iloc[-1]
+            # if len(by) != 0:
+            #     fig = go.Figure(data=[
+            #         go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Open, high=final_df.High,
+            #                        low=final_df.Low,
+            #                        name=stock),
+            #         go.Scatter(x=final_df.index, y=final_df.ma200, line=dict(color='red', width=1), name='Ma200'),
+            #         go.Scatter(x=final_df.index, y=final_df.highband, line=dict(color='blue', width=1),
+            #                    name='Upperband'),
+            #         go.Scatter(x=final_df.index, y=final_df.middleband, line=dict(color='blue', width=1),
+            #                    name='Middleband'),
+            #         go.Scatter(x=final_df.index, y=final_df.lowerband, line=dict(color='blue', width=1),
+            #                    name='Lowerband')])
+            #     fig.add_trace(
+            #         go.Scatter(x=final_df.index, y=final_df.signal1p, mode='markers', marker_symbol='triangle-up',
+            #                    marker_size=15))
+            #     fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
+            #     fig.layout.xaxis.type = 'category'
+            #     st.title(stock)
+            #     st.plotly_chart(fig)
 
             dic_buy['buy_symbol'].append(by.symbol)
             dic_buy['buydate'].append(by.name)
@@ -189,17 +208,31 @@ async def getdata(session, stock):
 
 
 
-            final_df = final_df.dropna()
-            final_df = final_df.iloc[-5:]
 
-            #
-            #
+            df = final_df.tail(2)
+            df_last = df['symbol'].iloc[-1]
+
+            df= pd.DataFrame(df,columns=['signal1','signal2'])
+            df1=df.sum()
 
 
-            last_candle = final_df.sum()#final_df.iloc[-1]
 
-            if last_candle['signal1'] != 0:
-                st.write(last_candle['symbol'] + ' buymy_kelter_stratergy  ')
+
+
+
+
+
+
+
+
+
+
+
+
+            if df1['signal1']> 0:
+
+
+
                 fig = go.Figure(data=[
                     go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Open, high=final_df.High,
                                    low=final_df.Low,
@@ -217,11 +250,13 @@ async def getdata(session, stock):
                 fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
                 fig.layout.xaxis.type = 'category'
                 st.title(stock)
+                st.write(df_last + ' buymy_kelter_stratergy  ')
                 st.plotly_chart(fig)
 
-                myst.append(last_candle['symbol'])
-            if last_candle['signal2'] != 0:
-                st.write(last_candle['symbol'] + ' sellmy_kelter_stratergy  ')
+                myst.append(df_last)
+            if df1['signal2'] > 0:
+
+
                 fig = go.Figure(data=[
                     go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Open, high=final_df.High,
                                    low=final_df.Low, name=stock),
@@ -238,9 +273,10 @@ async def getdata(session, stock):
                 fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
                 fig.layout.xaxis.type = 'category'
                 st.title(stock)
+                st.write(df_last + ' sellmy_kelter_stratergy  ')
                 st.plotly_chart(fig)
 
-                myst.append(last_candle['symbol'])
+                myst.append(df_last)
 
             return
         except:
@@ -269,7 +305,7 @@ button = st.button(label='Run_kelter_channel',key='kelter')
 if button:
 
     asyncio.run(main())
-    st.write(myst)
+    st.write(pd.DataFrame(myst))
     bcdate = ed - timedelta(dt)
 
 
