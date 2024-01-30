@@ -237,7 +237,7 @@ async def getdata(session, stock):
 
 
                 fig = go.Figure(data=[
-                    go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Open, high=final_df.High,
+                    go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Close, high=final_df.High,
                                    low=final_df.Low,
                                    name=stock),
                     go.Scatter(x=final_df.index, y=final_df.ma200, line=dict(color='red', width=1), name='Ma200'),
@@ -261,7 +261,7 @@ async def getdata(session, stock):
 
 
                 fig = go.Figure(data=[
-                    go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Open, high=final_df.High,
+                    go.Candlestick(x=final_df.index, open=final_df.Open, close=final_df.Close, high=final_df.High,
                                    low=final_df.Low, name=stock),
                     go.Scatter(x=final_df.index, y=final_df.ma200, line=dict(color='red', width=1), name='Ma200'),
                     go.Scatter(x=final_df.index, y=final_df.highband, line=dict(color='blue', width=1),
