@@ -250,6 +250,9 @@ async def getdata(session, stock):
                 fig.add_trace(
                     go.Scatter(x=final_df.index, y=final_df.signal1p, mode='markers', marker_symbol='triangle-up',
                                marker_size=15,marker_color='green'))
+                fig.add_trace(
+                    go.Scatter(x=final_df.index, y=final_df.signal2p, mode='markers', marker_symbol='triangle-down',
+                               marker_size=15, marker_color='red'))
                 fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
                 fig.layout.xaxis.type = 'category'
                 st.title(stock)
@@ -273,6 +276,9 @@ async def getdata(session, stock):
                 fig.add_trace(
                     go.Scatter(x=final_df.index, y=final_df.signal2p, mode='markers', marker_symbol='triangle-down',
                                marker_size=15,marker_color='red'))
+                fig.add_trace(
+                    go.Scatter(x=final_df.index, y=final_df.signal1p, mode='markers', marker_symbol='triangle-up',
+                               marker_size=15, marker_color='green'))
                 fig.update_layout(autosize=False, width=1800, height=800, xaxis_rangeslider_visible=False)
                 fig.layout.xaxis.type = 'category'
                 st.title(stock)
@@ -313,8 +319,9 @@ if button:
 
 
     d_buydf = pd.DataFrame(dic_buy)
-
+    d_buydf.to_parquet('buy.parquet')
     d_selldf = pd.DataFrame(dic_sell)
+    d_selldf.to_parquet('sell.parquet')
     col1,col2 = st.columns(2,gap='small')
 
     col1.write(d_buydf[d_buydf.buydate > bcdate])
