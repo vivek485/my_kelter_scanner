@@ -22,7 +22,7 @@ nest_asyncio.apply()
 # or import from a separate file: from symbols import symbols
 # ─────────────────────────────────────────────
 try:
-    from symbols import symbols          # your own symbols.py
+    from list import symbols          # your own symbols.py
 except ImportError:
     # fallback demo list so the app at least starts
     symbols = [
